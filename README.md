@@ -1,4 +1,32 @@
-## Filer
+### Installera paketen
+
+Yarn (https://classic.yarnpkg.com/en/docs/install):
+
+```
+yarn
+```
+
+NPM (Ingår i Node):
+
+```
+npm install
+```
+
+### Starta dev-server och börja leka
+
+Yarn:
+
+```
+yarn dev
+```
+
+NPM:
+
+```
+npm run dev
+```
+
+### Filer
 
 **package.json**
 
