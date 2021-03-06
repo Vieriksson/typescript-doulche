@@ -39,6 +39,23 @@ app.use((request, response, next) => {
   next() // Gå vidare med anropet
 })
 
+// Skapar en typescript-typ här för objektet vi kommer få från Open WeatherMap (dock inte alla props, orkar inte)
+// Kan vara bra att skapa upp sådana här typer för de svarsobjekt ni kommer få från det API ni anropar
+type CityWeather = {
+  id: number
+  name: string
+  timzone: number
+  wind: {
+    speed: number
+    deg: number
+  }
+  coord: {
+    lon: number
+    lat: number
+  }
+  visibility: number
+}
+
 // Lyssna på get-anrop mot url:en
 app.get('/weather/:city', async (request, response) => {
   const city = request.params.city // Här får du ut pathParams (localhost:3000/weather/stockholm)
@@ -51,7 +68,7 @@ app.get('/weather/:city', async (request, response) => {
     return response.status(400).json({ err: 'Riktigt bad request. Speca en stad TACK' })
   }
 
-  const weatherResponse = await axios.get(
+  const weatherResponse = await axios.get<CityWeather>(
     `https://api.openweathermap.org/data/2.5/weather?q=${city}&appid=${API_KEY}`
   )
   if (weatherResponse.status !== 200) {
@@ -59,6 +76,10 @@ app.get('/weather/:city', async (request, response) => {
       .status(weatherResponse.status)
       .json({ err: 'Could not fetch data from the weather api' })
   }
+
+  // Nu kommer data vara av typen CityWeather, så vid `weatherResponse.data.` får du upp
+  // allt som finns på typen
+  console.log(weatherResponse.data.name)
   return response.status(200).json(weatherResponse.data)
 })
 
